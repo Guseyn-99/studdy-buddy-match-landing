@@ -21,8 +21,7 @@ export function HeroSection() {
           Сервис подбора учебных партнёров на основе совместимости стилей обучения, расписания и целей
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-center">
-          {/* Главная кнопка */}
+        <div className="flex justify-center">
           <a
             href={formLink}
             target="_blank"
@@ -43,16 +42,6 @@ export function HeroSection() {
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
-          </a>
-
-          {/* Вторая кнопка */}
-          <a
-            href={formLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-10 py-4 bg-white/5 border border-white/15 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 backdrop-blur-md"
-          >
-            Пройти анкету
           </a>
         </div>
 
