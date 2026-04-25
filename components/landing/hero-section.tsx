@@ -21,7 +21,8 @@ export function HeroSection() {
 
         <div className="flex flex-wrap gap-4 justify-center">
           <a
-            href="#survey"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform"
+            target="_blank"
             className="px-10 py-4 bg-gradient-to-r from-violet-500 to-blue-500 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/40 inline-flex items-center gap-2"
           >
             Пройти опрос
