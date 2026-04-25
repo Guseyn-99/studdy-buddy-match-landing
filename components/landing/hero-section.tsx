@@ -3,6 +3,8 @@
 import { ChevronDown } from "lucide-react"
 
 export function HeroSection() {
+  const formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform"
+
   return (
     <section className="min-h-screen flex items-center justify-center text-center pt-20 relative px-6">
       <div className="max-w-4xl" data-aos="fade-up">
@@ -21,8 +23,9 @@ export function HeroSection() {
 
         <div className="flex flex-wrap gap-4 justify-center">
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform"
+            href={formLink}
             target="_blank"
+            rel="noopener noreferrer"
             className="px-10 py-4 bg-gradient-to-r from-violet-500 to-blue-500 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/40 inline-flex items-center gap-2"
           >
             Пройти опрос
@@ -41,10 +44,12 @@ export function HeroSection() {
             </svg>
           </a>
           <a
-            href="#about"
+            href={formLink}
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-10 py-4 bg-white/5 border border-white/15 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 backdrop-blur-md"
           >
-            Узнать больше
+            Пройти анкету
           </a>
         </div>
 
