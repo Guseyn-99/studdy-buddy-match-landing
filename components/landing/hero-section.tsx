@@ -21,13 +21,24 @@ export function HeroSection() {
 
         <div className="flex flex-wrap gap-4 justify-center">
           <a
-            href="https://forms.gle/edaoBkawRyJdWqkR6"
-            target="_blank"
+            href="#survey"
             className="px-10 py-4 bg-gradient-to-r from-violet-500 to-blue-500 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/40 inline-flex items-center gap-2"
           >
             Пройти опрос
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
           </a>
-
           <a
             href="#about"
             className="px-10 py-4 bg-white/5 border border-white/15 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-white/10 hover:-translate-y-1 backdrop-blur-md"
