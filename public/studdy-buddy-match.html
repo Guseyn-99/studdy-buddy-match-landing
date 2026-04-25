@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studdy Buddy Match – Не пропускай дедлайны</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Library для анимаций при скролле -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* ========== CSS Variables ========== */
+        :root {
+            --primary: #8B5CF6;          /* Фиолетовый */
+            --primary-dark: #7C3AED;
+            --accent: #3B82F6;            /* Синий */
+            --accent-dark: #2563EB;
+            --bg-dark: #0F0F1A;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ========== Reset & Base Styles ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========== Background Decoration ========== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 40%);
+            z-index: -1;
+            animation: backgroundFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-2%, -2%) rotate(1deg); }
+        }
+
+        /* ========== Container ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== Header ========== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            background: rgba(15, 15, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-btn {
+            padding: 10px 24px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .header-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        /* ========== Section Base ========== */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        /* ========== Hero Section ========== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #FFFFFF 0%, rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-description {
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 16px 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-secondary {
+            padding: 16px 40px;
+            background: var(--glass-bg);
+            color: white;
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            color: var(--text-muted);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ========== About Section ========== */
+        .about {
+            background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.05) 100%);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .about-card {
+            padding: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .about-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .about-icon svg {
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+
+        .about-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .about-card p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* ========== Problem Section ========== */
+        .problem {
+            position: relative;
+        }
+
+        .problem-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .problem-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .problem-text h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .problem-text p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .problem-list {
+            list-style: none;
+        }
+
+        .problem-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .problem-list li::before {
+            content: '✗';
+            color: #EF4444;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .problem-visual {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+        }
+
+        .problem-stat {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #EF4444 0%, #F97316 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .problem-stat-text {
+            font-size: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* ========== Solution Section ========== */
+        .solution {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+        }
+
+        .solution-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .solution-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .solution-content > *:first-child {
+                order: 2;
+            }
+        }
+
+        .solution-visual {
+            background: var(--gradient-primary);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .solution-check {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-check svg {
+            width: 50px;
+            height: 50px;
+            color: white;
+        }
+
+        .solution-visual-text {
+            font-size: 24px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-text h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .solution-text p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .solution-list {
+            list-style: none;
+        }
+
+        .solution-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .solution-list li::before {
+            content: '✓';
+            color: #10B981;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* ========== Target Audience Section ========== */
+        .audience-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .audience-card {
+            padding: 40px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .audience-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .audience-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .audience-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .audience-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .audience-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* ========== Features Section ========== */
+        .features {
+            background: linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.08) 50%, transparent 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateX(8px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .feature-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ========== Survey Section ========== */
+        .survey {
+            position: relative;
+        }
+
+        .survey-box {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 60px;
+            background: var(--gradient-primary);
+            border-radius: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .survey-box::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .survey-box h2 {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .survey-box p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .survey-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 48px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .survey-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .survey-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ========== Footer / Contact Section ========== */
+        footer {
+            padding: 80px 0 40px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .footer-content h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-content p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        .social-link svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .footer-contact {
+            margin-bottom: 40px;
+        }
+
+        .footer-contact a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .header-btn {
+                display: none;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .about-card, .audience-card {
+                padding: 30px;
+            }
+
+            .survey-box {
+                padding: 40px 24px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .feature-icon {
+                margin: 0 auto;
+            }
+        }
+
+        /* ========== Custom Scrollbar ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== Header ========== -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">SB</div>
+                    <span class="logo-text">Studdy Buddy Match</span>
+                </a>
+                <a href="#survey" class="header-btn">Пройти опрос</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== Hero Section ========== -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge" data-aos="fade-down" data-aos-delay="100">📚 Мобильное приложение для студентов</span>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
+                    Не пропускай <span>дедлайны</span> больше никогда
+                </h1>
+                <p class="hero-description" data-aos="fade-up" data-aos-delay="300">
+                    Studdy Buddy Match — умный помощник для контроля учебных дедлайнов студентов колледжа. 
+                    Организуй своё время и учись эффективнее.
+                </p>
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="400">
+                    <a href="#survey" class="btn-primary">
+                        Пройти опрос
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </a>
+                    <a href="#about" class="btn-secondary">Узнать больше</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- ========== About Section ========== -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">О проекте</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                Studdy Buddy Match создан специально для студентов, которые хотят держать учёбу под контролем
+            </p>
+            <div class="about-grid">
+                <div class="about-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3>Что это?</h3>
+                    <p>Мобильное приложение для отслеживания дедлайнов, домашних заданий и учебных событий в удобном формате.</p>
+                </div>
+                <div class="about-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3>Для кого?</h3>
+                    <p>Для студентов колледжей, которые хотят эффективно планировать учебное время и не забывать о важных задачах.</p>
+                </div>
+                <div class="about-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="about-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3>Какую задачу решает?</h3>
+                    <p>Помогает избежать пропущенных дедлайнов, снижает стресс и повышает академическую успеваемость.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Problem Section ========== -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <div class="problem-content">
+                <div class="problem-text" data-aos="fade-right">
+                    <h2>Знакомая ситуация?</h2>
+                    <p>Каждый студент сталкивается с хаосом из дедлайнов, заданий и мероприятий. Это приводит к стрессу и снижению успеваемости.</p>
+                    <ul class="problem-list">
+                        <li>Забываешь про важные дедлайны в последний момент</li>
+                        <li>Сложно отслеживать задания по разным предметам</li>
+                        <li>Нет единого места для всех учебных дел</li>
+                        <li>Стресс из-за накопившихся задач</li>
+                        <li>Не знаешь, с чего начать, когда дел слишком много</li>
+                    </ul>
+                </div>
+                <div class="problem-visual" data-aos="fade-left" data-aos-delay="200">
+                    <div class="problem-stat">73%</div>
+                    <p class="problem-stat-text">студентов хотя бы раз пропускали дедлайн из-за забывчивости</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Solution Section ========== -->
+    <section class="solution" id="solution">
+        <div class="container">
+            <div class="solution-content">
+                <div class="solution-visual" data-aos="fade-right">
+                    <div class="solution-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <p class="solution-visual-text">Все дедлайны под контролем!</p>
+                </div>
+                <div class="solution-text" data-aos="fade-left" data-aos-delay="200">
+                    <h2>Studdy Buddy Match — твой умный помощник</h2>
+                    <p>Мы создали приложение, которое делает управление учебными делами простым и приятным.</p>
+                    <ul class="solution-list">
+                        <li>Умные напоминания о дедлайнах заранее</li>
+                        <li>Единый календарь для всех предметов</li>
+                        <li>Приоритизация задач по срочности</li>
+                        <li>Синхронизация с одногруппниками</li>
+                        <li>Аналитика вашей продуктивности</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Target Audience Section ========== -->
+    <section class="audience" id="audience">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Для кого этот проект?</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                Мы создали приложение для тех, кто хочет учиться эффективнее
+            </p>
+            <div class="audience-cards">
+                <div class="audience-card" data-aos="zoom-in" data-aos-delay="100">
+                    <span class="audience-emoji">🎓</span>
+                    <h3>Студенты 1-2 курса</h3>
+                    <p>Только начинаете учёбу и хотите с самого начала выстроить правильные привычки планирования? Это приложение для вас!</p>
+                </div>
+                <div class="audience-card" data-aos="zoom-in" data-aos-delay="200">
+                    <span class="audience-emoji">📖</span>
+                    <h3>Старшекурсники</h3>
+                    <p>Много проектов, курсовых и дипломная работа? Управляйте всеми задачами в одном месте и не упускайте важные сроки.</p>
+                </div>
+                <div class="audience-card" data-aos="zoom-in" data-aos-delay="300">
+                    <span class="audience-emoji">👨‍🏫</span>
+                    <h3>Преподаватели</h3>
+                    <p>Хотите помочь студентам не пропускать дедлайны? Интегрируйте расписание и отслеживайте прогресс группы.</p>
+                </div>
+                <div class="audience-card" data-aos="zoom-in" data-aos-delay="400">
+                    <span class="audience-emoji">👥</span>
+                    <h3>Учебные группы</h3>
+                    <p>Работаете над групповыми проектами? Синхронизируйте задачи с командой и достигайте целей вместе.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Features Section ========== -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Ключевые возможности</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                Всё, что нужно для эффективной организации учёбы
+            </p>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Умные напоминания</h3>
+                        <p>Получайте уведомления заранее: за неделю, за день и за час до дедлайна. Настройте под свой ритм.</p>
+                    </div>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Общий календарь</h3>
+                        <p>Все дедлайны, экзамены и события в одном календаре. Никакого хаоса — только ясность.</p>
+                    </div>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Списки задач</h3>
+                        <p>Создавайте чек-листы для каждого предмета. Отмечайте выполненное и следите за прогрессом.</p>
+                    </div>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="250">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Синхронизация с группой</h3>
+                        <p>Делитесь дедлайнами с одногруппниками. Вместе проще не забыть о важном.</p>
+                    </div>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Аналитика продуктивности</h3>
+                        <p>Смотрите статистику: сколько задач выполнено, какие предметы отнимают больше времени.</p>
+                    </div>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="350">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Мобильность</h3>
+                        <p>Доступ с любого устройства. Добавляйте задачи на ходу — приложение всегда под рукой.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Survey Section ========== -->
+    <section class="survey" id="survey">
+        <div class="container">
+            <div class="survey-box" data-aos="zoom-in">
+                <h2>Помогите сделать продукт лучше!</h2>
+                <p>Ваше мнение очень важно для нас. Заполните короткую анкету, чтобы мы могли создать идеальное приложение для вас.</p>
+                <!-- 
+                    ВАЖНО: Замените ссылку # на актуальную ссылку Google Forms!
+                    Пример: href="https://forms.gle/ваша-ссылка"
+                -->
+                <a href="#" class="survey-btn" target="_blank" rel="noopener noreferrer">
+                    Заполнить анкету
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== Footer ========== -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content" data-aos="fade-up">
+                <h2>Присоединяйся к Studdy Buddy Match</h2>
+                <p>Начни контролировать свои дедлайны уже сегодня. Мы создаём приложение вместе с тобой!</p>
+                <a href="#survey" class="btn-primary">
+                    Пройти опрос
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="footer-social" data-aos="fade-up" data-aos-delay="100">
+                <!-- Ссылки на соцсети (замените # на актуальные ссылки) -->
+                <a href="#" class="social-link" aria-label="Telegram">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="VK">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.118-5.335-3.202C4.624 10.857 4 8.386 4 7.894c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.677.863 2.49 2.303 4.675 2.896 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.744c.373 0 .508.203.508.643v3.473c0 .372.17.508.271.508.22 0 .407-.136.813-.542 1.254-1.406 2.151-3.574 2.151-3.574.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.643-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="footer-contact" data-aos="fade-up" data-aos-delay="150">
+                <!-- Замените на актуальный email -->
+                <a href="mailto:hello@studdybuddymatch.ru">hello@studdybuddymatch.ru</a>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025, Studdy Buddy Match. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== AOS Library ========== -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Инициализация AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,          // Длительность анимации (мс)
+            easing: 'ease-out-cubic', // Тип анимации
+            once: true,             // Анимация только один раз
+            offset: 100,            // Смещение от видимой области
+            delay: 0,               // Базовая задержка
+        });
+
+        // Плавный скролл для ссылок-якорей
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Изменение прозрачности хедера при скролле
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(15, 15, 26, 0.95)';
+            } else {
+                header.style.background = 'rgba(15, 15, 26, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>
