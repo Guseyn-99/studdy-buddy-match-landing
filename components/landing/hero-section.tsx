@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react"
 
 export function HeroSection() {
-  const formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform"
+  const formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform?usp=dialog"
 
   return (
     <section className="min-h-screen flex items-center justify-center text-center pt-20 relative px-6">
