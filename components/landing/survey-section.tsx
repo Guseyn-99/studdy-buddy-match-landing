@@ -1,34 +1,27 @@
 "use client"
 
-import { ArrowRight } from "lucide-react"
-
 export function SurveySection() {
+  const formLink = "https://docs.google.com/forms/d/e/1FAIpQLSfd-XYeswRUIy95D0O0RK4J37BI45FtDCZ45nu95yFWbOs-qw/viewform"
+
   return (
-    <section id="survey" className="py-24">
-      <div className="container mx-auto px-6">
-        <div
-          className="max-w-2xl mx-auto p-16 bg-gradient-to-br from-violet-500 to-blue-500 rounded-[2rem] text-center relative overflow-hidden"
-          data-aos="zoom-in"
+    <section id="survey" className="py-24 text-center px-6">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-3xl md:text-5xl font-bold mb-6">
+          Готов начать?
+        </h2>
+
+        <p className="text-lg text-white/70 mb-10">
+          Пройди короткий опрос и мы подберём тебе идеального учебного напарника
+        </p>
+
+        <a
+          href={formLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-10 py-4 bg-gradient-to-r from-violet-500 to-blue-500 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-500/40 inline-flex items-center gap-2"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,transparent_70%)] animate-pulse" />
-          
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4 relative z-10">
-            Помоги нам стать лучше!
-          </h2>
-          <p className="text-lg opacity-90 mb-8 relative z-10">
-            Пройди короткий опрос и помоги создать идеальный сервис для студентов
-          </p>
-          
-          <a
-            href="https://forms.google.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 px-12 py-5 bg-white text-violet-600 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/30 relative z-10"
-          >
-            Пройти опрос
-            <ArrowRight className="w-5 h-5" />
-          </a>
-        </div>
+          Пройти опрос
+        </a>
       </div>
     </section>
   )
